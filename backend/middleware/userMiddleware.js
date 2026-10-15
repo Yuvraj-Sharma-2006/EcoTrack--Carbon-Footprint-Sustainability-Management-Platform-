@@ -75,7 +75,7 @@ module.exports.validateDeleteAccount = ((req,res,next)=>{
 });
 
 module.exports.userCheck = async(req,res,next) => {
- try{
+//  try{
       if(!req.cookies.token) {
         return res.status(200).json({ success: false ,  message : "please login first"});
       }
@@ -90,7 +90,7 @@ module.exports.userCheck = async(req,res,next) => {
       req.userRole = user.role;
       req.isBlocked = user.isBlocked;
     next();
-  }catch(err){
-     res.status(500).json({success : false , message : "internal server error"});
-  }
+//   }catch(err){
+//      res.status(500).json({success : false , message : "internal server error"});
+//   }
 };

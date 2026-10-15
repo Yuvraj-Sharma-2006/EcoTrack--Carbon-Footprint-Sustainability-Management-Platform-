@@ -8,7 +8,7 @@ const {notificationModel} = require("../model/notificationModel");
 const sendVerificationMail = require("../utills/sendVerificationMail");
 
 module.exports.checkUser = async(req,res)=>{
-//    try{
+   try{
          const id = req.currUser;
          const user = await userModel.findById(id);
 
@@ -16,9 +16,9 @@ module.exports.checkUser = async(req,res)=>{
              return res.status(200).json({success : false , message : "user is blocked"});
          }
          return res.status(200).json({success : true, role : user.role, isBlocked : user.isBlocked});
-    //  }catch(err){
-    //     return res.status(500).json({success : false , message : "internal server error"});
-    //  }
+     }catch(err){
+        return res.status(500).json({success : false , message : "internal server error"});
+     }
 };
 
 module.exports.register = async(req,res) => {

@@ -1,4 +1,3 @@
-
 import { Routes, Route } from "react-router-dom";
 
 import Home from "./pages/home";
@@ -17,7 +16,6 @@ import Notifications from "./pages/notifications";
 import AdminProfile from "./pages/admin-profile";
 import AdminUserManagement from "./pages/admin-user-management";
 import AdminChallengeManagement from "./pages/admin-challenge-management";
-import AdminLogin from "./pages/admin-login";
 import AdminReports from "./pages/admin-reports";
 import AdminDashboard from "./pages/admin-dashboard";
 import Settings from "./pages/settings";
@@ -34,7 +32,6 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
-      <Route path="/admin-login" element={<AdminLogin />} />
 
       {/* Root/home stays protected separately */}
       <Route
@@ -76,7 +73,10 @@ function App() {
       >
         <Route path="/admin-dashboard" element={<AdminDashboard />} />
         <Route path="/admin-profile" element={<AdminProfile />} />
-        <Route path="/admin-user-management" element={<AdminUserManagement />} />
+        <Route
+          path="/admin-user-management"
+          element={<AdminUserManagement />}
+        />
         <Route
           path="/admin-challenge-management"
           element={<AdminChallengeManagement />}

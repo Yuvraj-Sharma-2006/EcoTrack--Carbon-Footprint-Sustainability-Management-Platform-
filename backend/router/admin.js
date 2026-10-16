@@ -4,13 +4,10 @@ const multer  = require('multer');
 const {storage} = require("../cloundConfig.js");
 const upload = multer({storage})
 
-const {userCheck,validateLogin} = require("../middleware/userMiddleware");
+const {userCheck} = require("../middleware/userMiddleware");
 const {validateAdminProfile} = require("../middleware/adminMiddleware");
-const {adminLogin,getAdminProfile,updateAdminProfile,adminDashboard,users,block,unBlock,userReport,
+const {getAdminProfile,updateAdminProfile,adminDashboard,users,block,unBlock,userReport,
        completeChallengesReport,challengeReport} = require("../controller/admin");
-
-router.route("/login")
-      .post(validateLogin,adminLogin);
 
 router.use(userCheck);
 

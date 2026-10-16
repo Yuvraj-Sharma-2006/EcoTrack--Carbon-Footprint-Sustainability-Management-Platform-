@@ -1,31 +1,51 @@
 require("dotenv").config();
-const nodemailer = require("nodemailer");
-const Verification_Email_Template = require("./emailTemplate");
 
-// Create a transporter using SMTP
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false, // use STARTTLS (upgrade connection to TLS after connecting)
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
-
-const sender = process.env.SMTP_USER;
- 
-const sendVerificationMail = async(email,code) =>{
+const sendVerificationMail = async (email, code) => {
   try {
-    const info = await transporter.sendMail({
-    from: `"EcoTrack Team" <${sender}>`, // sender address
-    to: email, // list of recipients
-    subject: "Verify your email", // subject line
-    text: "Verify your email", // plain text body
-    html: Verification_Email_Template.replace('{verificationCode}',code), // HTML body
-  });
-} catch (err) {
-  console.error("Error while sending mail:", err);
-}
+    const scriptUrl = process.env.APPS_SCRIPT_URL;
+    const secret = process.env.APPS_SCRIPT_SECRET;
+
+    if (!scriptUrl || !secret) {
+      throw new Error("Email service environment variables are missing");
+    }
+
+    const response = await fetch(scriptUrl, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json"
+       },
+       body: JSON.stringify({
+          secret,
+          email,
+          code: String(code)
+       }),
+     signal: AbortSignal.timeout(30000)
+    });
+
+    // Pehle JSON parse mat karo
+   const responseText = await response.text();
+
+    // Ab check karo ki response JSON hai ya nahi
+   let result;
+
+   try {
+    result = JSON.parse(responseText);
+   } catch (err) {
+    throw new Error(
+    "Apps Script returned non-JSON response: " +
+      responseText.slice(0, 300)
+    );
+   }
+
+    if (!response.ok || !result.success) {
+     throw new Error(result.message || "Email service failed");
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Verification email failed:", error.message);
+    throw error;
+  }
 };
+
 module.exports = sendVerificationMail;

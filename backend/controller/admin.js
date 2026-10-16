@@ -6,33 +6,6 @@ const {getUser} = require("../service/report/user");
 const {completeChallengeReport,challengeReport,challengeCount} = require("../service/report/challenge");
 const {challengeModel} = require("../model/challengeModel");
 
-module.exports.adminLogin = async (req,res) => {
-     const {email,password} = req.body;
-  
-     if(!email || !password){
-          return res.status(400).json({success : false, message : "Email and password are required"});
-     }
-  
-     const user = await userModel.findOne({email , role : "admin"});
-     if(!user){
-          return res.status(400).json({success : false, message : "please Enter admin registered email"});
-     }
-     
-     const isMatch = await bcrypt.compare(password,user.password);
-     if(!isMatch){
-          return res.status(400).json({success : false, message : "Email or password is wrong"}); 
-     }
-
-     const token = secreatToken(user._id,email);
-        res.cookie("token",token,{
-            httpOnly: false,
-            secure: true,                 
-            sameSite: "none",             
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
-        return res.status(200).json({success : true, message : "Log in successfully as Admin"});
-};
-
 module.exports.getAdminProfile = async (req,res) => {
     const userId = req.currUser,role = req.userRole;
     if(!userId){

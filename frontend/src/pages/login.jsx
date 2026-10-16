@@ -74,7 +74,7 @@ function Login() {
       );
 
       const data = response.data;
-
+      console.log(data);
       if (data.success === "true") {
         toast.success(data.message);
 

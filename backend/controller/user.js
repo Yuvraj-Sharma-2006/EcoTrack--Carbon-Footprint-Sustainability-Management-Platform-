@@ -57,9 +57,9 @@ module.exports.login = async(req,res) => {
         return res.status(400).json({success : "false", message : "Email and password are required"});
    }
 
-   const user = await userModel.findOne({email , role : "user"});
+   const user = await userModel.findOne({email});
    if(!user){
-        return res.status(400).json({success : "false", message : "please Enter user registered email"});
+        return res.status(400).json({success : "false", message : "please Enter registered email"});
    }
    
    const isMatch = await bcrypt.compare(password,user.password);

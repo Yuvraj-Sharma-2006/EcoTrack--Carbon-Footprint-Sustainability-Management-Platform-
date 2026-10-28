@@ -1,6 +1,4 @@
-const bcrypt = require("bcrypt");
 const { cloudinary } = require("../cloundConfig");
-const {secreatToken} = require("../utills/secreatToken");
 const {userModel} = require('../model/userModel');
 const {getUser} = require("../service/report/user");
 const {completeChallengeReport,challengeReport,challengeCount} = require("../service/report/challenge");
@@ -16,7 +14,7 @@ module.exports.getAdminProfile = async (req,res) => {
         return res.status(400).json({success : false, message : "only admin user can access profile "});
     }
     
-    const user = await userModel.findOne({_id : userId , role : "admin"});
+    const user = await userModel.findOne({_id : userId , role : "admin",verified : true});
     
     if(!user){
         res.status(404).json({success : false, message : "Admin Profile not found"});
@@ -42,7 +40,7 @@ module.exports.updateAdminProfile = async (req,res) => {
 
     const {name,location} = req.body;
     const user = {name,location};
-    const existingUser = await userModel.findOne({_id : userId , role : "admin"});
+    const existingUser = await userModel.findOne({_id : userId , role : "admin",verified : true});
     
     if(!existingUser){
         return res.status(404).json({success: false,message: "Profile not found"});
@@ -116,7 +114,7 @@ module.exports.users = async (req,res) => {
         return res.status(400).json({success : false, message : "only admin user can get all user data"});
     }
 
-    const users = await userModel.find({role : "user"}).select("_id name email location profilePhoto isBlocked");
+    const users = await userModel.find({role : "user",verified : true}).select("_id name email location profilePhoto isBlocked");
     if(!users){
         res.status(400).json({success : false , message : "don't have users data"});
     }
@@ -139,7 +137,7 @@ module.exports.block = async (req,res) => {
         return res.status(400).json({success : false ,message : "please select first any user to block it"});
     }
 
-    const user = await userModel.findOneAndUpdate({_id : id , role : "user"},{isBlocked : true});
+    const user = await userModel.findOneAndUpdate({_id : id , role : "user",verified : true},{isBlocked : true});
     if(!user){
         return res.status(400).json({success : false , message : "doesn't find user to block"});
     }
@@ -162,7 +160,7 @@ module.exports.unBlock = async (req,res) => {
         return res.status(400).json({success : false ,message : "please select first any user to unblock it"});
     }
 
-    const user = await userModel.findOneAndUpdate({_id : id , role : "user"},{isBlocked : false});
+    const user = await userModel.findOneAndUpdate({_id : id , role : "user",verified : true},{isBlocked : false});
     if(!user){
         return res.status(400).json({success : false , message : "don't find user to unblock"});
     }

@@ -12,6 +12,10 @@ module.exports.checkUser = async(req,res)=>{
          const id = req.currUser;
          const user = await userModel.findById(id);
 
+         if(!user.verified){
+             return res.status(200).json({success : false , message : "user is unverified"});
+         }
+
          if(user.isBlocked){
              return res.status(200).json({success : false , message : "user is blocked"});
          }
